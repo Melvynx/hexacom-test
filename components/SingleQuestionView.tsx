@@ -1,17 +1,19 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { useQuizStore } from "@/lib/store";
 import { SCALE } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { CircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -22,6 +24,7 @@ export function SingleQuestionView() {
     getCurrentQuestion,
     answerQuestion,
     goToPreviousQuestion,
+    goToNextQuestion,
     questionOrder,
     currentQuestionIndex,
     getAnswer,
@@ -74,6 +77,23 @@ export function SingleQuestionView() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
+      {currentQuestionIndex === 0 && (
+        <div className="mb-6 p-4 bg-accent/20 rounded-lg">
+          <h2 className="font-medium mb-2">Comment ça marche :</h2>
+          <ol className="list-decimal list-inside space-y-1 text-sm">
+            <li>
+              Choisissez l'option qui vous correspond le mieux pour chaque
+              question
+            </li>
+            <li>Cliquez sur "Suivant" pour passer à la question suivante</li>
+            <li>
+              Vous pouvez revenir en arrière avec "Précédent" pour modifier vos
+              réponses
+            </li>
+          </ol>
+        </div>
+      )}
+
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">
@@ -87,32 +107,39 @@ export function SingleQuestionView() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-xl">{currentQuestion.text}</CardTitle>
-          <CardDescription>
-            {currentQuestion.type} · {currentQuestion.dimension}
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <RadioGroup
-            value={currentAnswer?.toString()}
+            value={
+              currentAnswer !== undefined ? currentAnswer.toString() : undefined
+            }
             onValueChange={(value) => handleValueChange(parseInt(value))}
             className="grid grid-cols-1 gap-3"
+            key={currentQuestion.id}
           >
             {SCALE.map((option) => (
-              <div
+              <RadioGroupPrimitive.Item
                 key={option.value}
-                className="flex items-center space-x-2 border p-3 rounded-md hover:bg-accent"
+                className={cn(buttonVariants({ variant: "outline" }), {
+                  "!border-primary": currentAnswer === option.value,
+                })}
+                value={option.value.toString()}
               >
-                <RadioGroupItem
-                  value={option.value.toString()}
-                  id={`${currentQuestion.id}-${option.value}`}
-                />
+                <div className="size-3 rounded-full border border-primary flex items-center justify-center">
+                  <RadioGroupPrimitive.Indicator
+                    data-slot="radio-group-indicator"
+                    className="relative flex items-center justify-center"
+                  >
+                    <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
+                  </RadioGroupPrimitive.Indicator>
+                </div>
                 <Label
                   htmlFor={`${currentQuestion.id}-${option.value}`}
                   className="flex-1 cursor-pointer"
                 >
                   {option.label}
                 </Label>
-              </div>
+              </RadioGroupPrimitive.Item>
             ))}
           </RadioGroup>
         </CardContent>
@@ -125,12 +152,19 @@ export function SingleQuestionView() {
             Précédent
           </Button>
 
-          {isLastQuestion && (
+          {isLastQuestion ? (
             <Button
               onClick={handleFinish}
               disabled={!hasAnswer(currentQuestion.id)}
             >
               Terminer
+            </Button>
+          ) : (
+            <Button
+              onClick={() => goToNextQuestion()}
+              disabled={!hasAnswer(currentQuestion.id)}
+            >
+              Suivant
             </Button>
           )}
         </CardFooter>

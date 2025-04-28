@@ -68,12 +68,6 @@ export const useQuizStore = create<QuizState>()(
           // Nouvelle réponse
           set({ answers: [...answers, { questionId, value }] });
         }
-
-        // Passer à la question suivante automatiquement après réponse
-        const { currentQuestionIndex, questionOrder } = get();
-        if (currentQuestionIndex < questionOrder.length - 1) {
-          set({ currentQuestionIndex: currentQuestionIndex + 1 });
-        }
       },
 
       goToNextQuestion: () => {
