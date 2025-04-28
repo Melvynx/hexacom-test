@@ -53,14 +53,16 @@ export default function ResultsPage() {
 
   return (
     <div className="container max-w-3xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8 text-center">Vos résultats PCM</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Vos résultats HEXACOMM
+      </h1>
       <ResultsDisplay results={results} />
 
       <div className="mt-8 space-y-4">
         <p className="text-sm text-muted-foreground">
-          Ce test est une version non-officielle de Process Communication Model.
-          Pour une évaluation professionnelle complète, consultez un coach
-          certifié PCM.
+          Ce test est conçu à titre éducatif uniquement. Pour une évaluation
+          professionnelle complète, consultez un coach spécialisé en analyse
+          comportementale.
         </p>
 
         <div className="flex justify-center">

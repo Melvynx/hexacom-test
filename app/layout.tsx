@@ -16,9 +16,9 @@ const geistMono = GeistMono({
 });
 
 export const metadata: Metadata = {
-  title: "Test PCM - Découvrez votre profil de personnalité",
+  title: "Test HEXACOMM - Découvrez votre profil de personnalité",
   description:
-    "Test complet du modèle Process Communication (PCM) pour découvrir votre profil de personnalité en 108 questions.",
+    "Test complet du modèle HEXACOMM pour découvrir votre profil de personnalité en 108 questions.",
 };
 
 export default function RootLayout({

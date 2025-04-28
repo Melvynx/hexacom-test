@@ -43,7 +43,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Votre profil PCM</CardTitle>
+          <CardTitle>Votre profil HEXACOMM</CardTitle>
           <CardDescription>
             Base: <strong>{results.base}</strong> | Phase:{" "}
             <strong>{results.phase}</strong>

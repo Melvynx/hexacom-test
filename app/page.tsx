@@ -24,16 +24,17 @@ export default function HomePage() {
   return (
     <div className="container max-w-4xl mx-auto py-12 px-4">
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Test PCM</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-4">
+          Test HEXACOMM
+        </h1>
         <p className="text-xl text-muted-foreground">
-          Découvrez votre profil de personnalité selon le modèle Process
-          Communication
+          Découvrez votre profil de personnalité selon le modèle HEXACOMM
         </p>
       </div>
 
       <Card className="mb-10">
         <CardHeader>
-          <CardTitle>Qu'est-ce que le modèle PCM?</CardTitle>
+          <CardTitle>Qu'est-ce que le modèle HEXACOMM?</CardTitle>
           <CardDescription>
             Un outil puissant pour comprendre votre personnalité et vos
             interactions
@@ -41,11 +42,10 @@ export default function HomePage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
-            Le Process Communication Model (PCM) est un outil psychométrique qui
-            identifie 6 types de personnalité distincts. Contrairement à
-            d'autres tests, le PCM reconnaît que chacun possède un mélange
-            unique de ces types, avec une dominante (Base) et une secondaire
-            (Phase).
+            Le modèle HEXACOMM est un outil psychométrique qui identifie 6 types
+            de personnalité distincts. Contrairement à d'autres tests, HEXACOMM
+            reconnaît que chacun possède un mélange unique de ces types, avec
+            une dominante (Base) et une secondaire (Phase).
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -89,8 +89,9 @@ export default function HomePage() {
           </p>
           <div className="bg-muted p-4 rounded-md mt-4">
             <p className="text-sm">
-              Note: Cette version est un clone non-officiel du test PCM. Pour
-              une analyse professionnelle certifiée, consultez un coach PCM.
+              Note: Cette version est conçue à titre éducatif uniquement. Pour
+              une analyse professionnelle certifiée, consultez un coach
+              spécialisé.
             </p>
           </div>
         </CardContent>

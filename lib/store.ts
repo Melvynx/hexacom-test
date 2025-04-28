@@ -126,7 +126,7 @@ export const useQuizStore = create<QuizState>()(
       },
     }),
     {
-      name: "pcm-quiz-storage",
+      name: "hexacomm-quiz-storage",
       partialize: (state) => ({
         questionOrder: state.questionOrder,
         currentQuestionIndex: state.currentQuestionIndex,

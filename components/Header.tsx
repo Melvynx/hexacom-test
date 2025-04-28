@@ -10,7 +10,7 @@ export function Header() {
     <header className="border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="font-bold text-lg">
-          Test PCM
+          Test HEXACOMM
         </Link>
 
         <nav>
