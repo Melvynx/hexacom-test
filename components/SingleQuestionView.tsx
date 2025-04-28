@@ -16,6 +16,7 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function SingleQuestionView() {
   const router = useRouter();
@@ -62,10 +63,51 @@ export function SingleQuestionView() {
     goToPreviousQuestion();
   };
 
+  const handleNext = () => {
+    if (currentQuestion && hasAnswer(currentQuestion.id)) {
+      goToNextQuestion();
+    }
+  };
+
   const handleFinish = () => {
     computeResults();
     router.push("/results");
   };
+
+  // Raccourcis clavier pour répondre aux questions (touches 1-5)
+  useHotkeys("1", () => currentQuestion && handleValueChange(0), [
+    currentQuestion,
+  ]);
+  useHotkeys("2", () => currentQuestion && handleValueChange(1), [
+    currentQuestion,
+  ]);
+  useHotkeys("3", () => currentQuestion && handleValueChange(2), [
+    currentQuestion,
+  ]);
+  useHotkeys("4", () => currentQuestion && handleValueChange(3), [
+    currentQuestion,
+  ]);
+  useHotkeys("5", () => currentQuestion && handleValueChange(4), [
+    currentQuestion,
+  ]);
+
+  // Raccourci pour passer à la question suivante ou terminer (touche Enter)
+  useHotkeys(
+    "enter",
+    () => {
+      if (currentQuestion && hasAnswer(currentQuestion.id)) {
+        if (isLastQuestion) {
+          handleFinish();
+        } else {
+          handleNext();
+        }
+      }
+    },
+    [currentQuestion, hasAnswer, isLastQuestion]
+  );
+
+  // Raccourci pour revenir à la question précédente (touche Backspace)
+  useHotkeys("backspace", handlePrevious, []);
 
   if (!currentQuestion) {
     return (
@@ -85,10 +127,21 @@ export function SingleQuestionView() {
               Choisissez l'option qui vous correspond le mieux pour chaque
               question
             </li>
-            <li>Cliquez sur "Suivant" pour passer à la question suivante</li>
             <li>
-              Vous pouvez revenir en arrière avec "Précédent" pour modifier vos
-              réponses
+              Utilisez les touches{" "}
+              <kbd className="px-1 py-0.5 bg-muted rounded text-xs">1</kbd> à{" "}
+              <kbd className="px-1 py-0.5 bg-muted rounded text-xs">5</kbd> pour
+              répondre rapidement
+            </li>
+            <li>
+              Appuyez sur{" "}
+              <kbd className="px-1 py-0.5 bg-muted rounded text-xs">Entrée</kbd>{" "}
+              pour passer à la question suivante
+            </li>
+            <li>
+              Utilisez{" "}
+              <kbd className="px-1 py-0.5 bg-muted rounded text-xs">Retour</kbd>{" "}
+              pour revenir en arrière
             </li>
           </ol>
         </div>
@@ -117,7 +170,7 @@ export function SingleQuestionView() {
             className="grid grid-cols-1 gap-3"
             key={currentQuestion.id}
           >
-            {SCALE.map((option) => (
+            {SCALE.map((option, index) => (
               <RadioGroupPrimitive.Item
                 key={option.value}
                 className={cn(buttonVariants({ variant: "outline" }), {
@@ -137,6 +190,9 @@ export function SingleQuestionView() {
                   htmlFor={`${currentQuestion.id}-${option.value}`}
                   className="flex-1 cursor-pointer"
                 >
+                  <span className="mr-2 text-xs text-muted-foreground">
+                    {index + 1}.
+                  </span>{" "}
                   {option.label}
                 </Label>
               </RadioGroupPrimitive.Item>
@@ -161,7 +217,7 @@ export function SingleQuestionView() {
             </Button>
           ) : (
             <Button
-              onClick={() => goToNextQuestion()}
+              onClick={handleNext}
               disabled={!hasAnswer(currentQuestion.id)}
             >
               Suivant
