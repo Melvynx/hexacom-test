@@ -5,7 +5,7 @@ import { computeScore } from "./scoring";
 import { Answer, Question, Results } from "./types";
 
 interface QuizState {
-  // Questions et ordre
+  lang: "fr" | "en";
   questionOrder: string[]; // IDs des questions dans un ordre aléatoire
   currentQuestionIndex: number;
   answers: Answer[];
@@ -13,6 +13,7 @@ interface QuizState {
 
   // Actions
   initialize: () => void;
+  setLang: (lang: "fr" | "en") => void;
   answerQuestion: (questionId: string, value: number) => void;
   goToNextQuestion: () => void;
   goToPreviousQuestion: () => void;
@@ -36,10 +37,12 @@ function shuffleArray<T>(array: T[]): T[] {
 export const useQuizStore = create<QuizState>()(
   persist(
     (set, get) => ({
+      lang: "fr",
       questionOrder: [],
       currentQuestionIndex: 0,
       answers: [],
       results: null,
+      setLang: (lang) => set({ lang }),
 
       initialize: () => {
         const questionIds = QUESTIONS.map((q) => q.id);

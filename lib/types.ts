@@ -11,6 +11,7 @@ export type Dimension = "Motivation" | "Force" | "Stress";
 export interface Question {
   id: string; // q001 … q108
   text: string;
+  en: string; // English version
   type: PcmType;
   dimension: Dimension;
 }

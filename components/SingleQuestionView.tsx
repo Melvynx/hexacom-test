@@ -20,57 +20,47 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 export function SingleQuestionView() {
   const router = useRouter();
-  const {
-    initialize,
-    getCurrentQuestion,
-    answerQuestion,
-    goToPreviousQuestion,
-    goToNextQuestion,
-    questionOrder,
-    currentQuestionIndex,
-    getAnswer,
-    hasAnswer,
-    answers,
-    computeResults,
-  } = useQuizStore();
+  const { lang, ...store } = useQuizStore();
 
   // Initialiser l'ordre des questions si nécessaire
   useEffect(() => {
-    if (questionOrder.length === 0) {
-      initialize();
+    if (store.questionOrder.length === 0) {
+      store.initialize();
     }
-  }, [initialize, questionOrder.length]);
+  }, [store.initialize, store.questionOrder.length]);
 
-  const currentQuestion = getCurrentQuestion();
+  const currentQuestion = store.getCurrentQuestion();
   const currentAnswer = currentQuestion
-    ? getAnswer(currentQuestion.id)
+    ? store.getAnswer(currentQuestion.id)
     : undefined;
   const progress =
-    questionOrder.length > 0
-      ? ((currentQuestionIndex + 1) / questionOrder.length) * 100
+    store.questionOrder.length > 0
+      ? ((store.currentQuestionIndex + 1) / store.questionOrder.length) * 100
       : 0;
-  const isLastQuestion = currentQuestionIndex === questionOrder.length - 1;
+  const isLastQuestion =
+    store.currentQuestionIndex === store.questionOrder.length - 1;
   const allQuestionsAnswered =
-    questionOrder.length > 0 && answers.length === questionOrder.length;
+    store.questionOrder.length > 0 &&
+    store.answers.length === store.questionOrder.length;
 
   const handleValueChange = (value: number) => {
     if (currentQuestion) {
-      answerQuestion(currentQuestion.id, value);
+      store.answerQuestion(currentQuestion.id, value);
     }
   };
 
   const handlePrevious = () => {
-    goToPreviousQuestion();
+    store.goToPreviousQuestion();
   };
 
   const handleNext = () => {
-    if (currentQuestion && hasAnswer(currentQuestion.id)) {
-      goToNextQuestion();
+    if (currentQuestion && store.hasAnswer(currentQuestion.id)) {
+      store.goToNextQuestion();
     }
   };
 
   const handleFinish = () => {
-    computeResults();
+    store.computeResults();
     router.push("/results");
   };
 
@@ -95,7 +85,7 @@ export function SingleQuestionView() {
   useHotkeys(
     "enter",
     () => {
-      if (currentQuestion && hasAnswer(currentQuestion.id)) {
+      if (currentQuestion && store.hasAnswer(currentQuestion.id)) {
         if (isLastQuestion) {
           handleFinish();
         } else {
@@ -103,7 +93,7 @@ export function SingleQuestionView() {
         }
       }
     },
-    [currentQuestion, hasAnswer, isLastQuestion]
+    [currentQuestion, store.hasAnswer, isLastQuestion]
   );
 
   // Raccourci pour revenir à la question précédente (touche Backspace)
@@ -119,7 +109,7 @@ export function SingleQuestionView() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {currentQuestionIndex === 0 && (
+      {store.currentQuestionIndex === 0 && (
         <div className="mb-6 p-4 bg-accent/20 rounded-lg">
           <h2 className="font-medium mb-2">Comment ça marche :</h2>
           <ol className="list-decimal list-inside space-y-1 text-sm">
@@ -150,7 +140,8 @@ export function SingleQuestionView() {
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">
-            Question {currentQuestionIndex + 1} sur {questionOrder.length}
+            Question {store.currentQuestionIndex + 1} sur{" "}
+            {store.questionOrder.length}
           </span>
           <span className="text-sm font-medium">{Math.round(progress)}%</span>
         </div>
@@ -159,7 +150,9 @@ export function SingleQuestionView() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-xl">{currentQuestion.text}</CardTitle>
+          <CardTitle className="text-xl">
+            {lang === "en" ? currentQuestion.en : currentQuestion.text}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <RadioGroup
@@ -203,7 +196,7 @@ export function SingleQuestionView() {
           <Button
             variant="outline"
             onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
+            disabled={store.currentQuestionIndex === 0}
           >
             Précédent
           </Button>
@@ -211,14 +204,14 @@ export function SingleQuestionView() {
           {isLastQuestion ? (
             <Button
               onClick={handleFinish}
-              disabled={!hasAnswer(currentQuestion.id)}
+              disabled={!store.hasAnswer(currentQuestion.id)}
             >
               Terminer
             </Button>
           ) : (
             <Button
               onClick={handleNext}
-              disabled={!hasAnswer(currentQuestion.id)}
+              disabled={!store.hasAnswer(currentQuestion.id)}
             >
               Suivant
             </Button>
@@ -228,7 +221,8 @@ export function SingleQuestionView() {
 
       <div className="text-center text-sm text-muted-foreground">
         <p>
-          {answers.length} questions répondues sur {questionOrder.length}
+          {store.answers.length} questions répondues sur{" "}
+          {store.questionOrder.length}
         </p>
         {allQuestionsAnswered && (
           <Button onClick={handleFinish} variant="link" className="mt-2">
